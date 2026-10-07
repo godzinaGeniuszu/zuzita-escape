@@ -312,7 +312,7 @@
 </head>
 <body>
 
-  <audio id="ambient" loop preload="auto">
+  <audio id="ambient" loop preload="auto" playsinline>
     <source src="ambient.mp3" type="audio/mpeg">
   </audio>
 
@@ -320,19 +320,15 @@
 
   <div class="container">
 
-    <!-- ETAP STARTOWY - NADANIE IMIENIA -->
+    <!-- ETAP STARTOWY -->
     <div id="stageIntro" class="stage active">
       <h1>Nowe życie...</h1>
-      
       <p style="text-align:center;">Ktoś właśnie do nas dołączył.</p>
-      
       <img src="zdjecia/dzieciok.jpg" class="photo" alt="Nasze dziecko">
-
       <p style="text-align:center; margin-top: 10px;">
         Nasze nowe dziecko potrzebuje imienia.<br>
         Jak chcesz je nazwać?
       </p>
-
       <input type="text" id="plushName" placeholder="wpisz imię..." autocomplete="off" autocapitalize="off">
       <button onclick="submitPlushName()">Nadaj imię</button>
       <p class="error" id="errorPlush">Musisz podać imię...</p>
@@ -341,21 +337,15 @@
     <!-- ETAP 0 -->
     <div id="stage0" class="stage">
       <h1>Witaj...</h1>
-
       <p>Otworzyłaś drzwi.</p>
       <p>Nie ma powrotu od momentu, w którym zeskanowałaś ten kod.</p>
-
-      <!-- Obrazek drzwi -->
       <img src="zdjecia/drzwi.gif" class="photo" alt="Drzwi">
-
       <p>Przed Tobą pięć drzwi.<br>Każde z nich prowadzi głębiej.</p>
-
       <div class="hint">
         <strong>Pierwsza wskazówka:</strong><br>
         Wróć myślami do miejsca, w którym wszystko się zaczęło.<br>
         Tam, gdzie po raz pierwszy poczułaś, że coś się zmieniło.
       </div>
-
       <p>Wpisz hasło, które otworzy pierwsze drzwi:</p>
       <input type="text" id="pass0" placeholder="hasło..." autocomplete="off" autocapitalize="off">
       <button onclick="checkPassword(0)">Otwórz drzwi</button>
@@ -368,12 +358,10 @@
       <p>Przeszłaś.</p>
       <img src="zdjecia/1.jpg" class="photo" alt="">
       <p>To wspomnienie wciąż tu jest.<br>Zatrzymane w kadrze, jakby czas odmówił współpracy.</p>
-
       <div class="hint">
         <strong>Zagadka:</strong><br>
         Jakim słówkiem zazwyczaj Cię nazywam?
       </div>
-
       <input type="text" id="pass1" placeholder="hasło..." autocomplete="off" autocapitalize="off">
       <button onclick="checkPassword(1)">Dalej</button>
       <p class="error" id="error1">Spróbuj ponownie.</p>
@@ -385,12 +373,10 @@
       <p>Coraz ciszej.</p>
       <img src="zdjecia/2.jpg" class="photo" alt="">
       <p>Wtedy jeszcze nie wiedziałaś, dokąd to wszystko zmierza.</p>
-
       <div class="hint">
         <strong>Zagadka:</strong><br>
         Otwórz prezent który Ci teraz dam, a znajdziesz tam słowo, które jest kluczem do kolejnych drzwi.
       </div>
-
       <input type="text" id="pass2" placeholder="hasło..." autocomplete="off" autocapitalize="off">
       <button onclick="checkPassword(2)">Otwórz</button>
       <p class="error" id="error2">To nie jest właściwe hasło.</p>
@@ -401,14 +387,11 @@
       <h2>Trzecie drzwi</h2>
       <img src="zdjecia/3.jpg" class="photo" alt="">
       <p>Niektóre momenty zostawiają ślad mocniejszy niż inne.</p>
-
       <p style="text-align:center; margin: 25px 0 10px;">Wybierz legendę:</p>
-
       <button class="choice-btn" onclick="showZekrom()">
         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/644.png" alt="Zekrom">
         Zekrom
       </button>
-
       <button class="choice-btn" onclick="showReshiram()">
         <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/643.png" alt="Reshiram">
         Reshiram
@@ -419,13 +402,11 @@
           <strong>Zekrom mówi:</strong><br>
           Klikaj imiona naszych dzieci <strong>w kolejności alfabetycznej</strong>.
         </div>
-
         <div class="names-container" id="names-buttons"></div>
         <div class="selected-list" id="selected-list">
           <span style="color:#666;">Kliknij imiona w dobrej kolejności...</span>
         </div>
         <button onclick="resetNames()" style="background:#333;">Resetuj</button>
-
         <div id="password-reveal" class="hidden" style="margin-top:25px;">
           <div class="hint">
             <strong>Hasło z pierwszych liter:</strong><br>
@@ -450,28 +431,22 @@
       <h2>Czwarte drzwi</h2>
       <p>Zostały tylko ostatnie wspomnienia.</p>
       <p>Ułóż je w kolejności, w jakiej wszystko się wydarzyło.</p>
-
       <img src="zdjecia/4.jpg" class="photo" alt="">
-
       <div class="names-container" id="memory-buttons"></div>
-
       <div class="selected-list" id="memory-selected">
         <span style="color:#666;">Klikaj w chronologicznej kolejności...</span>
       </div>
-
       <button onclick="resetMemories()" style="background:#333;">Resetuj</button>
     </div>
 
-    <!-- ETAP 5 - FINAŁ -->
+    <!-- ETAP 5 -->
     <div id="stage5" class="stage">
       <h1>Przeszłaś wszystkie drzwi.</h1>
       <p>Dotarłaś do końca.</p>
       <p>Teraz możesz zobaczyć, co czekało na Ciebie po drugiej stronie.</p>
-
       <video id="finalVideo" controls playsinline>
         <source src="zuzita-movie.mp4" type="video/mp4">
       </video>
-
       <div class="final-message">
         <p style="font-size: 1.35rem; color: #c40000; margin-bottom: 14px;">
           Wszystkiego najlepszego, Zuzita.
@@ -487,80 +462,99 @@
 
   <div id="dark-overlay"></div>
   <div id="animation-text"></div>
-
-  <div id="pokeball-container">
-    <div class="pokeball"></div>
-  </div>
-
-  <div id="lightbox" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" alt="">
-  </div>
+  <div id="pokeball-container"><div class="pokeball"></div></div>
+  <div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src="" alt=""></div>
 
   <script>
+    // ========== MUZYKA ==========
     const ambient = document.getElementById('ambient');
     let musicStarted = false;
     let isMuted = false;
 
     function startMusic() {
-      if (!musicStarted) {
-        ambient.volume = 0.35;
-        ambient.play().catch(() => {});
+      if (musicStarted) return;
+      ambient.volume = 0.38;
+      ambient.play().then(() => {
         musicStarted = true;
-      }
+      }).catch(() => {});
     }
 
     function toggleMusic() {
+      resumeAudio();
+      if (!musicStarted) startMusic();
       isMuted = !isMuted;
       ambient.muted = isMuted;
       document.getElementById('music-toggle').textContent = isMuted ? '🔇' : '🎵';
     }
 
-    document.body.addEventListener('click', startMusic, { once: true });
-    document.body.addEventListener('touchstart', startMusic, { once: true });
+    // ========== AUDIO CONTEXT (efekty dźwiękowe) ==========
+    let audioCtx = null;
 
-    let audioCtx;
     function initAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function resumeAudio() {
+      initAudio();
     }
 
     function playTone(freq, type, duration, vol = 0.1) {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = type;
-      osc.frequency.value = freq;
-      gain.gain.value = vol;
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-      osc.stop(audioCtx.currentTime + duration);
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.value = vol;
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
     }
 
-    function playClick() { playTone(180, 'square', 0.08, 0.06); }
+    function playClick() { playTone(180, 'square', 0.08, 0.07); }
     function playSuccess() {
-      playTone(90, 'sawtooth', 0.4, 0.12);
-      setTimeout(() => playTone(60, 'sine', 0.6, 0.08), 150);
+      playTone(90, 'sawtooth', 0.4, 0.13);
+      setTimeout(() => playTone(60, 'sine', 0.6, 0.09), 150);
     }
     function playCreepyWhoosh() {
-      initAudio();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sawtooth';
-      osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
-      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 1.2);
+      try {
+        initAudio();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 1.2);
+      } catch (e) {}
     }
 
+    // Start dźwięków po pierwszej interakcji
+    function firstInteraction() {
+      resumeAudio();
+      startMusic();
+    }
+    document.body.addEventListener('click', firstInteraction, { once: true });
+    document.body.addEventListener('touchstart', firstInteraction, { once: true });
+
+    // ========== HASŁA + LOGIKA ==========
     const passwords = ["rogoźnik", "zuź", "naszyjnik", "abdgnpsu", "kochamcie"];
     let plushieName = "";
 
     function submitPlushName() {
+      resumeAudio();
       const input = document.getElementById('plushName');
       const name = input.value.trim().toLowerCase();
       const error = document.getElementById('errorPlush');
@@ -591,7 +585,6 @@
           setTimeout(() => {
             overlay.style.opacity = '0';
             textEl.style.opacity = '0';
-
             setTimeout(() => {
               document.getElementById('stageIntro').classList.remove('active');
               document.getElementById('stage0').classList.add('active');
@@ -600,19 +593,16 @@
           }, 1600);
           return;
         }
-
         textEl.textContent = lines[i];
         textEl.style.opacity = '1';
         textEl.style.animation = 'textPulse 2.3s ease';
-        playTone(75 + i * 20, 'sine', 0.9, 0.09);
-
+        playTone(75 + i * 20, 'sine', 0.9, 0.1);
         setTimeout(() => {
           textEl.style.opacity = '0';
           i++;
           setTimeout(showNext, 650);
         }, 2400);
       }
-
       setTimeout(showNext, 800);
     }
 
@@ -624,7 +614,6 @@
         correctOrder.push(plushieName);
       }
       correctOrder.sort((a, b) => a.localeCompare(b, 'pl'));
-
       const passwordFromNames = correctOrder.map(n => n[0]).join('');
       document.getElementById('generated-password').textContent = passwordFromNames;
       passwords[3] = passwordFromNames;
@@ -706,7 +695,6 @@
       btn.classList.add('selected');
       btn.disabled = true;
       updateMemoryList();
-
       if (selectedMemories.length === 5) {
         if (selectedMemories.every((m, i) => m === memoryOrder[i])) {
           startFinalAnimation();
@@ -731,7 +719,6 @@
 
     function startFinalAnimation() {
       playCreepyWhoosh();
-
       const overlay = document.getElementById('dark-overlay');
       const textEl = document.getElementById('animation-text');
       overlay.style.opacity = '0.87';
@@ -755,23 +742,21 @@
           }, 1800);
           return;
         }
-
         textEl.textContent = lines[i];
         textEl.style.opacity = '1';
         textEl.style.animation = 'textPulse 2.2s ease';
-        playTone(70 + i * 18, 'sine', 0.9, 0.09);
-
+        playTone(70 + i * 18, 'sine', 0.9, 0.1);
         setTimeout(() => {
           textEl.style.opacity = '0';
           i++;
           setTimeout(showNext, 700);
         }, 2400);
       }
-
       setTimeout(showNext, 900);
     }
 
     function checkPassword(stage) {
+      resumeAudio();
       playClick();
       const input = document.getElementById(`pass${stage}`);
       const error = document.getElementById(`error${stage}`);
@@ -791,6 +776,7 @@
     }
 
     function checkReshiram() {
+      resumeAudio();
       playClick();
       const value = document.getElementById('pass3').value.trim().toLowerCase();
       const error = document.getElementById('error3');
@@ -799,7 +785,6 @@
         const container = document.getElementById('pokeball-container');
         container.style.display = 'flex';
         playCreepyWhoosh();
-
         setTimeout(() => {
           container.style.display = 'none';
           document.getElementById('stage3').classList.remove('active');
@@ -814,21 +799,25 @@
       }
     }
 
-    function openLightbox(src) {
-      const lightbox = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = src;
-      lightbox.classList.add('active');
+    // Wyłącz ambient gdy film gra
+    const finalVideo = document.getElementById('finalVideo');
+    if (finalVideo) {
+      finalVideo.addEventListener('play', () => {
+        ambient.pause();
+        isMuted = true;
+        document.getElementById('music-toggle').textContent = '🔇';
+      });
     }
 
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
     function closeLightbox() {
       document.getElementById('lightbox').classList.remove('active');
     }
-
     document.querySelectorAll('.photo').forEach(photo => {
-      photo.addEventListener('click', () => {
-        openLightbox(photo.src);
-      });
+      photo.addEventListener('click', () => openLightbox(photo.src));
     });
 
     document.querySelectorAll('input').forEach(input => {
@@ -843,16 +832,6 @@
         }
       });
     });
-
-    // Wyłącz ambient gdy film się odpala
-    const finalVideo = document.getElementById('finalVideo');
-    if (finalVideo) {
-      finalVideo.addEventListener('play', () => {
-        ambient.pause();
-        isMuted = true;
-        document.getElementById('music-toggle').textContent = '🔇';
-      });
-    }
   </script>
 </body>
 </html>
