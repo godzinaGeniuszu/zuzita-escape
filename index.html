@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Witaj...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background-color: #050505;
+      color: #c9c9c9;
+      font-family: 'Special Elite', cursive;
+      line-height: 1.65;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 40px 22px 70px;
+    }
+
+    h1, h2 {
+      font-family: 'Special Elite', cursive;
+      color: #9b0000;
+      text-shadow: 0 0 12px rgba(155, 0, 0, 0.5);
+      letter-spacing: 2px;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      text-align: center;
+      margin-bottom: 30px;
+      animation: flicker 5s infinite;
+    }
+
+    h2 {
+      font-size: 1.7rem;
+      margin: 10px 0 20px;
+      text-align: center;
+    }
+
+    p { margin-bottom: 18px; font-size: 1.15rem; }
+
+    .stage { display: none; animation: fadeIn 1.1s ease; }
+    .stage.active { display: block; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      background: #0e0e0e;
+      border: 2px solid #7a0000;
+      color: #eee;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.15rem;
+      text-align: center;
+      margin: 18px 0 12px;
+      outline: none;
+      border-radius: 2px;
+    }
+
+    input:focus {
+      border-color: #c40000;
+      box-shadow: 0 0 18px rgba(196, 0, 0, 0.35);
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      background: #7a0000;
+      color: #fff;
+      border: none;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: 0.25s;
+      letter-spacing: 1px;
+      border-radius: 2px;
+      margin-top: 8px;
+    }
+
+    button:active { background: #a00000; }
+
+    .choice-btn {
+      background: #1a1a1a;
+      border: 2px solid #7a0000;
+      margin: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 12px;
+    }
+
+    .choice-btn img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+    }
+
+    .photo {
+      width: 78%;
+      max-width: 320px;
+      display: block;
+      margin: 22px auto;
+      border: 2px solid #7a0000;
+      filter: grayscale(30%) contrast(1.15);
+      box-shadow: 0 0 25px rgba(122, 0, 0, 0.4);
+      cursor: zoom-in;
+    }
+
+    .hint {
+      background: #0c0c0c;
+      border-left: 4px solid #7a0000;
+      padding: 16px 18px;
+      margin: 28px 0;
+      font-size: 1.08rem;
+      line-height: 1.5;
+    }
+
+    video {
+      width: 100%;
+      margin: 28px 0;
+      border: 2px solid #7a0000;
+      box-shadow: 0 0 30px rgba(122, 0, 0, 0.45);
+    }
+
+    .final-message { text-align: center; margin-top: 35px; color: #d0d0d0; }
+
+    .error {
+      color: #ff3333;
+      text-align: center;
+      margin-top: 12px;
+      display: none;
+      font-size: 1rem;
+    }
+
+    .hidden { display: none; }
+
+    .names-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+
+    .name-btn {
+      background: #1a1a1a;
+      border: 2px solid #7a0000;
+      color: #eee;
+      padding: 12px 16px;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: 0.2s;
+    }
+
+    .name-btn.selected {
+      background: #7a0000;
+      transform: scale(0.96);
+    }
+
+    .selected-list {
+      background: #0c0c0c;
+      border: 2px solid #333;
+      padding: 15px;
+      margin: 20px 0;
+      min-height: 60px;
+      text-align: center;
+      font-size: 1.15rem;
+    }
+
+    .selected-list span {
+      display: inline-block;
+      margin: 4px 6px;
+      color: #ff4444;
+    }
+
+    #dark-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 9000;
+      transition: opacity 1.5s;
+    }
+
+    #animation-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #9b0000;
+      font-size: 1.45rem;
+      text-align: center;
+      z-index: 9100;
+      opacity: 0;
+      text-shadow: 0 0 20px rgba(155,0,0,0.8);
+      pointer-events: none;
+      width: 90%;
+      max-width: 400px;
+      line-height: 1.5;
+    }
+
+    #music-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      background: rgba(122, 0, 0, 0.8);
+      border: 2px solid #9b0000;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 9999;
+      user-select: none;
+    }
+
+    #pokeball-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .pokeball {
+      width: 120px;
+      height: 120px;
+      background: linear-gradient(to bottom, #ff1a1a 0%, #ff1a1a 48%, #111 48%, #111 52%, #fff 52%, #fff 100%);
+      border-radius: 50%;
+      border: 6px solid #111;
+      position: relative;
+      animation: throwBall 1.8s ease-in-out forwards;
+    }
+
+    .pokeball::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      background: #fff;
+      border: 5px solid #111;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      cursor: zoom-out;
+    }
+
+    #lightbox img {
+      max-width: 92%;
+      max-height: 88vh;
+      border: 3px solid #9b0000;
+      box-shadow: 0 0 40px rgba(155, 0, 0, 0.6);
+      object-fit: contain;
+    }
+
+    #lightbox.active {
+      display: flex;
+    }
+
+    @keyframes throwBall {
+      0%   { transform: translateY(80vh) scale(0.3); opacity: 0; }
+      40%  { transform: translateY(-20px) scale(1.1); opacity: 1; }
+      60%  { transform: translateY(0) scale(1); }
+      80%  { transform: scale(1.3); }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    @keyframes flicker {
+      0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+      20%, 24%, 55% { opacity: 0.55; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes textPulse {
+      0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.97); }
+      50% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="ambient" loop preload="auto">
+    <source src="ambient.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="music-toggle" onclick="toggleMusic()">🎵</div>
+
+  <div class="container">
+
+    <!-- ETAP STARTOWY - NADANIE IMIENIA -->
+    <div id="stageIntro" class="stage active">
+      <h1>Nowe życie...</h1>
+      
+      <p style="text-align:center;">Ktoś właśnie do nas dołączył.</p>
+      
+      <img src="zdjecia/dzieciok.jpg" class="photo" alt="Nasze dziecko">
+
+      <p style="text-align:center; margin-top: 10px;">
+        Nasze nowe dziecko potrzebuje imienia.<br>
+        Jak chcesz je nazwać?
+      </p>
+
+      <input type="text" id="plushName" placeholder="wpisz imię..." autocomplete="off" autocapitalize="off">
+      <button onclick="submitPlushName()">Nadaj imię</button>
+      <p class="error" id="errorPlush">Musisz podać imię...</p>
+    </div>
+
+    <!-- ETAP 0 -->
+    <div id="stage0" class="stage">
+      <h1>Witaj...</h1>
+
+      <p>Otworzyłaś drzwi.</p>
+      <p>Nie ma powrotu od momentu, w którym zeskanowałaś ten kod.</p>
+
+      <!-- Obrazek drzwi -->
+      <img src="zdjecia/drzwi.gif" class="photo" alt="Drzwi">
+
+      <p>Przed Tobą pięć drzwi.<br>Każde z nich prowadzi głębiej.</p>
+
+      <div class="hint">
+        <strong>Pierwsza wskazówka:</strong><br>
+        Wróć myślami do miejsca, w którym wszystko się zaczęło.<br>
+        Tam, gdzie po raz pierwszy poczułaś, że coś się zmieniło.
+      </div>
+
+      <p>Wpisz hasło, które otworzy pierwsze drzwi:</p>
+      <input type="text" id="pass0" placeholder="hasło..." autocomplete="off" autocapitalize="off">
+      <button onclick="checkPassword(0)">Otwórz drzwi</button>
+      <p class="error" id="error0">To nie to hasło.</p>
+    </div>
+
+    <!-- ETAP 1 -->
+    <div id="stage1" class="stage">
+      <h2>Pierwsze drzwi</h2>
+      <p>Przeszłaś.</p>
+      <img src="zdjecia/1.jpg" class="photo" alt="">
+      <p>To wspomnienie wciąż tu jest.<br>Zatrzymane w kadrze, jakby czas odmówił współpracy.</p>
+
+      <div class="hint">
+        <strong>Zagadka:</strong><br>
+        Jakim słówkiem zazwyczaj Cię nazywam?
+      </div>
+
+      <input type="text" id="pass1" placeholder="hasło..." autocomplete="off" autocapitalize="off">
+      <button onclick="checkPassword(1)">Dalej</button>
+      <p class="error" id="error1">Spróbuj ponownie.</p>
+    </div>
+
+    <!-- ETAP 2 -->
+    <div id="stage2" class="stage">
+      <h2>Drugie drzwi</h2>
+      <p>Coraz ciszej.</p>
+      <img src="zdjecia/2.jpg" class="photo" alt="">
+      <p>Wtedy jeszcze nie wiedziałaś, dokąd to wszystko zmierza.</p>
+
+      <div class="hint">
+        <strong>Zagadka:</strong><br>
+        Otwórz prezent który Ci teraz dam, a znajdziesz tam słowo, które jest kluczem do kolejnych drzwi.
+      </div>
+
+      <input type="text" id="pass2" placeholder="hasło..." autocomplete="off" autocapitalize="off">
+      <button onclick="checkPassword(2)">Otwórz</button>
+      <p class="error" id="error2">To nie jest właściwe hasło.</p>
+    </div>
+
+    <!-- ETAP 3 -->
+    <div id="stage3" class="stage">
+      <h2>Trzecie drzwi</h2>
+      <img src="zdjecia/3.jpg" class="photo" alt="">
+      <p>Niektóre momenty zostawiają ślad mocniejszy niż inne.</p>
+
+      <p style="text-align:center; margin: 25px 0 10px;">Wybierz legendę:</p>
+
+      <button class="choice-btn" onclick="showZekrom()">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/644.png" alt="Zekrom">
+        Zekrom
+      </button>
+
+      <button class="choice-btn" onclick="showReshiram()">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/643.png" alt="Reshiram">
+        Reshiram
+      </button>
+
+      <div id="zekrom-section" class="hidden">
+        <div class="hint" style="margin-top:25px;">
+          <strong>Zekrom mówi:</strong><br>
+          Klikaj imiona naszych dzieci <strong>w kolejności alfabetycznej</strong>.
+        </div>
+
+        <div class="names-container" id="names-buttons"></div>
+        <div class="selected-list" id="selected-list">
+          <span style="color:#666;">Kliknij imiona w dobrej kolejności...</span>
+        </div>
+        <button onclick="resetNames()" style="background:#333;">Resetuj</button>
+
+        <div id="password-reveal" class="hidden" style="margin-top:25px;">
+          <div class="hint">
+            <strong>Hasło z pierwszych liter:</strong><br>
+            <span id="generated-password" style="font-size:1.5rem; color:#ff4444; letter-spacing:4px;"></span>
+          </div>
+          <p style="text-align:center; color:#aaa; margin-top:10px;">Teraz wybierz Reshirama</p>
+        </div>
+      </div>
+
+      <div id="reshiram-section" class="hidden">
+        <div class="hint" style="margin-top:25px;">
+          <strong>Reshiram czeka na hasło:</strong>
+        </div>
+        <input type="text" id="pass3" placeholder="hasło z Zekroma..." autocomplete="off" autocapitalize="off">
+        <button onclick="checkReshiram()">Rzuć Pokéballa</button>
+        <p class="error" id="error3">Złe hasło...</p>
+      </div>
+    </div>
+
+    <!-- ETAP 4 -->
+    <div id="stage4" class="stage">
+      <h2>Czwarte drzwi</h2>
+      <p>Zostały tylko ostatnie wspomnienia.</p>
+      <p>Ułóż je w kolejności, w jakiej wszystko się wydarzyło.</p>
+
+      <img src="zdjecia/4.jpg" class="photo" alt="">
+
+      <div class="names-container" id="memory-buttons"></div>
+
+      <div class="selected-list" id="memory-selected">
+        <span style="color:#666;">Klikaj w chronologicznej kolejności...</span>
+      </div>
+
+      <button onclick="resetMemories()" style="background:#333;">Resetuj</button>
+    </div>
+
+    <!-- ETAP 5 - FINAŁ -->
+    <div id="stage5" class="stage">
+      <h1>Przeszłaś wszystkie drzwi.</h1>
+      <p>Dotarłaś do końca.</p>
+      <p>Teraz możesz zobaczyć, co czekało na Ciebie po drugiej stronie.</p>
+
+      <video id="finalVideo" controls playsinline>
+        <source src="zuzita-movie.mp4" type="video/mp4">
+      </video>
+
+      <div class="final-message">
+        <p style="font-size: 1.35rem; color: #c40000; margin-bottom: 14px;">
+          Wszystkiego najlepszego, Zuzita.
+        </p>
+        <p style="font-size: 1.15rem; color: #aaa; line-height: 1.6;">
+          Niech te i wszystkie kolejne urodziny<br>
+          będą dla Ciebie czymś naprawdę wyjątkowym <3
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="dark-overlay"></div>
+  <div id="animation-text"></div>
+
+  <div id="pokeball-container">
+    <div class="pokeball"></div>
+  </div>
+
+  <div id="lightbox" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    const ambient = document.getElementById('ambient');
+    let musicStarted = false;
+    let isMuted = false;
+
+    function startMusic() {
+      if (!musicStarted) {
+        ambient.volume = 0.35;
+        ambient.play().catch(() => {});
+        musicStarted = true;
+      }
+    }
+
+    function toggleMusic() {
+      isMuted = !isMuted;
+      ambient.muted = isMuted;
+      document.getElementById('music-toggle').textContent = isMuted ? '🔇' : '🎵';
+    }
+
+    document.body.addEventListener('click', startMusic, { once: true });
+    document.body.addEventListener('touchstart', startMusic, { once: true });
+
+    let audioCtx;
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+
+    function playTone(freq, type, duration, vol = 0.1) {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = vol;
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playClick() { playTone(180, 'square', 0.08, 0.06); }
+    function playSuccess() {
+      playTone(90, 'sawtooth', 0.4, 0.12);
+      setTimeout(() => playTone(60, 'sine', 0.6, 0.08), 150);
+    }
+    function playCreepyWhoosh() {
+      initAudio();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
+      gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 1.2);
+    }
+
+    const passwords = ["rogoźnik", "zuź", "naszyjnik", "abdgnpsu", "kochamcie"];
+    let plushieName = "";
+
+    function submitPlushName() {
+      const input = document.getElementById('plushName');
+      const name = input.value.trim().toLowerCase();
+      const error = document.getElementById('errorPlush');
+
+      if (name.length < 2) {
+        error.style.display = 'block';
+        setTimeout(() => error.style.display = 'none', 2500);
+        return;
+      }
+
+      plushieName = name;
+      const niceName = name.charAt(0).toUpperCase() + name.slice(1);
+      playSuccess();
+
+      const overlay = document.getElementById('dark-overlay');
+      const textEl = document.getElementById('animation-text');
+      overlay.style.opacity = '0.87';
+
+      const lines = [
+        "Imię zostało przyjęte...",
+        `Witaj w rodzinie, ${niceName}.`,
+        "Teraz zaczyna się prawdziwa gra."
+      ];
+
+      let i = 0;
+      function showNext() {
+        if (i >= lines.length) {
+          setTimeout(() => {
+            overlay.style.opacity = '0';
+            textEl.style.opacity = '0';
+
+            setTimeout(() => {
+              document.getElementById('stageIntro').classList.remove('active');
+              document.getElementById('stage0').classList.add('active');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 700);
+          }, 1600);
+          return;
+        }
+
+        textEl.textContent = lines[i];
+        textEl.style.opacity = '1';
+        textEl.style.animation = 'textPulse 2.3s ease';
+        playTone(75 + i * 20, 'sine', 0.9, 0.09);
+
+        setTimeout(() => {
+          textEl.style.opacity = '0';
+          i++;
+          setTimeout(showNext, 650);
+        }, 2400);
+      }
+
+      setTimeout(showNext, 800);
+    }
+
+    let correctOrder = ["apsik", "benek", "dupsik", "glucik", "niglet", "prucik", "sid", "uwusik"];
+    let selectedNames = [];
+
+    function initNames() {
+      if (plushieName && !correctOrder.includes(plushieName)) {
+        correctOrder.push(plushieName);
+      }
+      correctOrder.sort((a, b) => a.localeCompare(b, 'pl'));
+
+      const passwordFromNames = correctOrder.map(n => n[0]).join('');
+      document.getElementById('generated-password').textContent = passwordFromNames;
+      passwords[3] = passwordFromNames;
+
+      const container = document.getElementById('names-buttons');
+      container.innerHTML = '';
+      [...correctOrder].sort(() => Math.random() - 0.5).forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'name-btn';
+        btn.textContent = name;
+        btn.onclick = () => { playClick(); selectName(name, btn); };
+        container.appendChild(btn);
+      });
+    }
+
+    function selectName(name, btn) {
+      if (selectedNames.includes(name)) return;
+      selectedNames.push(name);
+      btn.classList.add('selected');
+      btn.disabled = true;
+      updateSelectedList();
+      if (selectedNames.length === correctOrder.length) checkOrder();
+    }
+
+    function updateSelectedList() {
+      const list = document.getElementById('selected-list');
+      list.innerHTML = selectedNames.length === 0
+        ? '<span style="color:#666;">Kliknij imiona w dobrej kolejności...</span>'
+        : selectedNames.map(n => `<span>${n}</span>`).join('');
+    }
+
+    function checkOrder() {
+      if (selectedNames.every((n, i) => n === correctOrder[i])) {
+        playSuccess();
+        document.getElementById('password-reveal').classList.remove('hidden');
+      } else {
+        setTimeout(resetNames, 900);
+      }
+    }
+
+    function resetNames() {
+      selectedNames = [];
+      document.getElementById('password-reveal').classList.add('hidden');
+      initNames();
+      updateSelectedList();
+    }
+
+    function showZekrom() {
+      playClick();
+      document.getElementById('zekrom-section').classList.remove('hidden');
+      document.getElementById('reshiram-section').classList.add('hidden');
+      resetNames();
+    }
+
+    function showReshiram() {
+      playClick();
+      document.getElementById('reshiram-section').classList.remove('hidden');
+      document.getElementById('zekrom-section').classList.add('hidden');
+    }
+
+    const memoryOrder = ["amq", "kraków", "chorzów", "rogoźnik", "powroźnik"];
+    let selectedMemories = [];
+
+    function initMemories() {
+      const container = document.getElementById('memory-buttons');
+      container.innerHTML = '';
+      [...memoryOrder].sort(() => Math.random() - 0.5).forEach(mem => {
+        const btn = document.createElement('button');
+        btn.className = 'name-btn';
+        btn.textContent = mem;
+        btn.onclick = () => { playClick(); selectMemory(mem, btn); };
+        container.appendChild(btn);
+      });
+    }
+
+    function selectMemory(mem, btn) {
+      if (selectedMemories.includes(mem)) return;
+      selectedMemories.push(mem);
+      btn.classList.add('selected');
+      btn.disabled = true;
+      updateMemoryList();
+
+      if (selectedMemories.length === 5) {
+        if (selectedMemories.every((m, i) => m === memoryOrder[i])) {
+          startFinalAnimation();
+        } else {
+          setTimeout(resetMemories, 900);
+        }
+      }
+    }
+
+    function updateMemoryList() {
+      const list = document.getElementById('memory-selected');
+      list.innerHTML = selectedMemories.length === 0
+        ? '<span style="color:#666;">Klikaj w chronologicznej kolejności...</span>'
+        : selectedMemories.map(m => `<span>${m}</span>`).join('');
+    }
+
+    function resetMemories() {
+      selectedMemories = [];
+      initMemories();
+      updateMemoryList();
+    }
+
+    function startFinalAnimation() {
+      playCreepyWhoosh();
+
+      const overlay = document.getElementById('dark-overlay');
+      const textEl = document.getElementById('animation-text');
+      overlay.style.opacity = '0.87';
+
+      const lines = [
+        "Wszystkie drzwi zostały otwarte...",
+        "Przeszłaś całą drogę.",
+        "Wszystkiego najlepszego z okazji urodzin Zuź!!!!!!!"
+      ];
+
+      let i = 0;
+      function showNext() {
+        if (i >= lines.length) {
+          setTimeout(() => {
+            overlay.style.opacity = '0';
+            textEl.style.opacity = '0';
+            document.getElementById('stage4').classList.remove('active');
+            document.getElementById('stage5').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            playSuccess();
+          }, 1800);
+          return;
+        }
+
+        textEl.textContent = lines[i];
+        textEl.style.opacity = '1';
+        textEl.style.animation = 'textPulse 2.2s ease';
+        playTone(70 + i * 18, 'sine', 0.9, 0.09);
+
+        setTimeout(() => {
+          textEl.style.opacity = '0';
+          i++;
+          setTimeout(showNext, 700);
+        }, 2400);
+      }
+
+      setTimeout(showNext, 900);
+    }
+
+    function checkPassword(stage) {
+      playClick();
+      const input = document.getElementById(`pass${stage}`);
+      const error = document.getElementById(`error${stage}`);
+      const value = input.value.trim().toLowerCase();
+
+      if (value === passwords[stage].toLowerCase()) {
+        playSuccess();
+        document.getElementById(`stage${stage}`).classList.remove('active');
+        document.getElementById(`stage${stage + 1}`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (stage + 1 === 4) initMemories();
+      } else {
+        error.style.display = 'block';
+        input.value = '';
+        setTimeout(() => error.style.display = 'none', 2500);
+      }
+    }
+
+    function checkReshiram() {
+      playClick();
+      const value = document.getElementById('pass3').value.trim().toLowerCase();
+      const error = document.getElementById('error3');
+
+      if (value === passwords[3]) {
+        const container = document.getElementById('pokeball-container');
+        container.style.display = 'flex';
+        playCreepyWhoosh();
+
+        setTimeout(() => {
+          container.style.display = 'none';
+          document.getElementById('stage3').classList.remove('active');
+          document.getElementById('stage4').classList.add('active');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          initMemories();
+        }, 1900);
+      } else {
+        error.style.display = 'block';
+        document.getElementById('pass3').value = '';
+        setTimeout(() => error.style.display = 'none', 2500);
+      }
+    }
+
+    function openLightbox(src) {
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lightbox.classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    document.querySelectorAll('.photo').forEach(photo => {
+      photo.addEventListener('click', () => {
+        openLightbox(photo.src);
+      });
+    });
+
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+          if (input.id === 'plushName') submitPlushName();
+          else if (input.id === 'pass3') checkReshiram();
+          else {
+            const stage = parseInt(input.id.replace('pass', ''));
+            if (!isNaN(stage)) checkPassword(stage);
+          }
+        }
+      });
+    });
+
+    // Wyłącz ambient gdy film się odpala
+    const finalVideo = document.getElementById('finalVideo');
+    if (finalVideo) {
+      finalVideo.addEventListener('play', () => {
+        ambient.pause();
+        isMuted = true;
+        document.getElementById('music-toggle').textContent = '🔇';
+      });
+    }
+  </script>
+</body>
+</html>
