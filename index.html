@@ -311,6 +311,16 @@
   </style>
 </head>
 <body>
+  <div id="time-lock" style="display: none; text-align: center; padding: 80px 25px; max-width: 480px; margin: 0 auto;">
+    <h1 style="font-size: 2.4rem; margin-bottom: 25px;">Jeszcze nie czas...</h1>
+    <p style="font-size: 1.2rem; color: #aaa; line-height: 1.6;">
+      Ta strona otworzy się<br>
+      dopiero <strong style="color: #c40000;">29 października</strong>.
+    </p>
+    <p style="margin-top: 40px; font-size: 0.95rem; color: #666;">
+      Cierpliwość jest częścią gry.
+    </p>
+  </div>
 
   <audio id="ambient" loop preload="auto" playsinline>
     <source src="ambient.mp3" type="audio/mpeg">
@@ -851,6 +861,19 @@
         }
       });
     });
+
+  // ========== BLOKADA CZASOWA ==========
+  const unlockDate = new Date('2026-10-29T00:00:00');
+  const now = new Date();
+
+  if (now < unlockDate) {
+    // Ukryj całą zawartość strony
+    document.querySelector('.container').style.display = 'none';
+    document.getElementById('music-toggle').style.display = 'none';
+    
+    // Pokaż komunikat
+    document.getElementById('time-lock').style.display = 'block';
+  }
   </script>
 </body>
 </html>
